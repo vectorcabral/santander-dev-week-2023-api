@@ -1,0 +1,154 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyNeShyLkKn/jn7bdogDx97x",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/vectorcabral/santander-dev-week-2023-api/blob/main/Projeto_ETL_DIO_BootCamp\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "EXTRACT"
+      ],
+      "metadata": {
+        "id": "ZzYHO4TSTPDJ"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "import random\n",
+        "import requests\n",
+        "import json\n",
+        "import csv"
+      ],
+      "metadata": {
+        "id": "UeSwm5F5TQfu"
+      },
+      "execution_count": 48,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "users = []"
+      ],
+      "metadata": {
+        "id": "MIo5vOGlbKjJ"
+      },
+      "execution_count": 65,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "TRANSFORM\n"
+      ],
+      "metadata": {
+        "id": "9zvScYkKb6aH"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "with open('./usuarios.csv', 'w') as csvfile:\n",
+        "  csv.writer(csvfile, delimiter= ',').writerow([\"1\",\"Ana\"])\n",
+        "  csv.writer(csvfile, delimiter= ',').writerow([\"2\",\"Bruno\"])\n",
+        "  csv.writer(csvfile, delimiter= ',').writerow([\"3\",\"Caio\"])\n",
+        "  csv.writer(csvfile, delimiter= ',').writerow([\"4\",\"Dio\"])\n",
+        "  csv.writer(csvfile, delimiter= ',').writerow([\"5\",\"Leo\"])\n"
+      ],
+      "metadata": {
+        "id": "AX1tj9BdV8ke"
+      },
+      "execution_count": 66,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "with open('./usuarios.csv') as csvfile:\n",
+        "    csv_reader = csv.reader(csvfile)\n",
+        "    for row in csv_reader:\n",
+        "        user = {\"id\": row[0], \"name\": row[1], \"news\": []}\n",
+        "        users.append(user)"
+      ],
+      "metadata": {
+        "id": "obpm3-33XsjM"
+      },
+      "execution_count": 69,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "LOAD"
+      ],
+      "metadata": {
+        "id": "VabkDAaZb2b7"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "with open('FrasesInvestimento.txt', 'r') as arquivo:\n",
+        "  mensagens = arquivo.readlines()\n",
+        "\n",
+        "\n",
+        "def generate_ai_news(user):\n",
+        "  mensagem = random.choice(mensagens).strip()\n",
+        "  text = (f\"Ola {user['name']}, {mensagem}\")\n",
+        "  return text\n",
+        "\n",
+        "\n",
+        "for user in users:\n",
+        "  news = generate_ai_news(user)\n",
+        "  print(news)\n",
+        "  user['news'].append({\"description\": news})"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "o9KkaRWOY4S9",
+        "outputId": "bfb4a7d8-f1e1-4df7-849d-2faa0446be7d"
+      },
+      "execution_count": 70,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Ola Ana, Investir é o caminho para o crescimento financeiro.\n",
+            "Ola Bruno, Não deixe a inflação corroer sua poupança. Investir é essencial.\n",
+            "Ola Caio, O tempo é seu aliado no mundo dos investimentos.\n",
+            "Ola Dio, Diversificar protege seu patrimônio.\n",
+            "Ola Leo, Seu futuro depende dos investimentos de hoje.\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
